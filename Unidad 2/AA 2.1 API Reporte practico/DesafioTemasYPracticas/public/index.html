@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<head>
+    <title>Explorador de Temas</title>
+    <link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+    <h1>Explorador de Temas 📚</h1>
+
+    <form id="Form" class="buttons">
+        <button type="button" data-id="001">Programación Web</button>
+        <button type="button" data-id="002">Bases de Datos</button>
+        <button type="button" data-id="003">Algoritmos</button>
+    </form>
+
+    <div id="Container"></div>
+
+    <script>
+        document.querySelectorAll("#Form button").forEach(button => {
+          button.addEventListener("click", async (event) => {
+            const id = event.target.getAttribute("data-id");
+            
+            const response = await fetch(`/tema/${id}`);
+            const tema = await response.json();
+    
+            const contenedor = document.getElementById("Container"); 
+            if (tema.error) {
+              contenedor.innerHTML = "<h2>Tema no encontrado</h2>";
+            } else {
+              contenedor.innerHTML = `
+                <h2>${tema.nombre}</h2>
+                <p>${tema.descripcion}</p>
+                <h3>Palabras clave: ${tema.palabrasClaves.join(', ')}</h3>
+                <h3>Prácticas:</h3>
+                <ul>
+                  ${tema.practicas.map(practica => `
+                    <li>
+                      <strong>${practica.titulo}</strong><br>
+                      ${practica.descripcion}<br>
+                      <em>Objetivo: ${practica.objetivo}</em>
+                    </li>
+                  `).join('')}
+                </ul>`;
+            }
+          });
+        });
+    </script>
+</body>
+</html>
