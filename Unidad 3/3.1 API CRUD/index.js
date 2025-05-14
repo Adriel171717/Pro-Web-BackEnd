@@ -38,3 +38,62 @@ app.post('/Usuarios', async (req, res) => {
         res.status(500).json({ error: 'Error al crear el usuario'})
     }
 });
+
+//Seccion 7 actualizar usuario
+
+app.put('/usuario/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const usuario = await Usuario.findByIdAndUpdate(id, req.body);
+        if(!usuario){
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        const usuarioActualizado = await Usuario.findById(id);
+        res.status(200).json(usuario);
+        console.log(usuarioActualizado);
+    } catch (error) {
+        console.error('Error al obtener los usuarios:', error);
+        res.status(500).json({ error: 'Error al obtener los usuarios' });
+    }
+})
+
+//Seccion 8 Eliminar Usuario
+
+app.delete('/usuario/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const usuario = await Usuario.findByIdAndDelete(id);
+        if(!usuario){
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        res.status(200).json({ message: 'Usuario eliminado'});
+    } catch (error) {
+        console.error('Error al obtener los usuarios:', error);
+        res.status(500).json({ error: 'Error al obtener los usuarios' });
+    }
+})
+
+//Seccion 5 Obtener Usuarios
+
+app.get('/usuarios', async (req, res) => {
+    try {
+        const usuarios = await Usuario.find();
+        res.status(200).json(usuarios);
+    } catch (error) {
+        console.error('Error al obtener los usuarios:', error);
+        res.status(500).json({ error: 'Error al obtener los usuarios' });
+    }
+})
+
+//Seccion 6: Consultar usuario por id
+
+app.get('/usuario/:id', async (req, res) => {
+    try {
+        const {id} = req.params;
+        const usuario = await Usuario.findById(id);
+        res.status(200).json(usuario);
+    } catch (error) {
+        console.error('Error al obtener los usuarios:', error);
+        res.status(500).json({ error: 'Error al obtener los usuarios' });
+    }
+})
